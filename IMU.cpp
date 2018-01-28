@@ -16,21 +16,6 @@ void IMU::start() {
   microsPrevious = micros();
 }
 
-void IMU::update() {
-  unsigned long microsNow;
-  microsNow = micros();
-  if (microsNow - microsPrevious >= microsPerReading) {
-    read();
-    filter.update(gyro.x, gyro.y, gyro.z, acc.x, acc.y, acc.z);
-    microsPrevious+=microsPerReading;
-  }
-}
-
-void IMU::read() {
-  acc = imu.readNormalizeAccel();
-  gyro = imu.readNormalizeGyro();
-}
-
 void IMU::calibrate() {
   imu.calibrateGyro();
 }
@@ -48,4 +33,23 @@ float IMU::pitch() {
 float IMU::roll() {
   update();
   return filter.getRoll();
+}
+
+float IMU::getTemperature() {
+  imu.getTemperature();
+}
+
+void IMU::read() {
+  acc = imu.readNormalizeAccel();
+  gyro = imu.readNormalizeGyro();
+}
+
+void IMU::update() {
+  unsigned long microsNow;
+  microsNow = micros();
+  if (microsNow - microsPrevious >= microsPerReading) {
+    read();
+    filter.update(gyro.x, gyro.y, gyro.z, acc.x, acc.y, acc.z);
+    microsPrevious+=microsPerReading;
+  }
 }

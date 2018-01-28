@@ -95,7 +95,7 @@ class MPU6050 {
     mpu6050_clockSource_t getClockSource();
     void setClockSource(mpu6050_clockSource_t source);
 
-    float readTemperature();
+    float getTemperature();
 
     void calibrateGyro(uint8_t samples = 50);
     void setThreshold(uint8_t multiple = 1);

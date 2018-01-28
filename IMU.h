@@ -14,6 +14,7 @@ class IMU {
     float yaw();
     float pitch();
     float roll();
+    float getTemperature();
     void calibrate();
   private:
     void read();

@@ -218,7 +218,7 @@ Vector MPU6050::readNormalizeGyro() {
   return ng;
 }
 
-float MPU6050::readTemperature() {
+float MPU6050::getTemperature() {
   int16_t temp;
   Wire.beginTransmission(MPU6050_ADDRESS);
   Wire.write(MPU6050_TEMP);
