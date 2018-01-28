@@ -5,10 +5,11 @@ IMU::IMU() {
 }
 
 void IMU::begin() {
-  while(!imu.begin()) {
-    Serial.println("IMU non trovata");
-    delay(500);
-  }
+  imu.begin();
+}
+
+bool IMU::check() {
+  return imu.check();
 }
 
 void IMU::start() {

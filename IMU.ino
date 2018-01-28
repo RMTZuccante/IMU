@@ -4,12 +4,13 @@ IMU orientation;
 
 void setup() {
   Serial.begin(115200);
+  if (!orientation.check()) while(1) Serial.println("IMU not found!");
   orientation.begin();
   delay(100);
   orientation.calibrate();
   delay(100);
   orientation.start();
-  
+  Serial.println("All ok! Starting...");
 }
 
 void loop() {
@@ -20,6 +21,6 @@ void loop() {
   Serial.print("\tRoll: ");
   Serial.println(orientation.roll());
 
-  
-  
+
+
 }

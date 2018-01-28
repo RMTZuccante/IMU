@@ -10,6 +10,7 @@ class IMU {
   public:
     IMU();
     void begin();
+    bool check();
     void start();
     float yaw();
     float pitch();
