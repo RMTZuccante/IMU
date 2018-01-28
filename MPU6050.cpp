@@ -13,12 +13,9 @@ MPU6050::MPU6050() {
 
 void MPU6050::begin(mpu6050_dps_t scale, mpu6050_range_t range) {
   Wire.begin();
-  writeRegister8(MPU6050_PWR_MGMT, 1); //set the clock to XGyro
-
+  writeRegister8(MPU6050_PWR_MGMT, 1); //set the clock to XGyro and turn on
   setScale(scale);
   setRange(range);
-
-  writeRegisterBit(MPU6050_PWR_MGMT, 6, false); //turn on the sensor
 }
 
 bool MPU6050::check() {
@@ -225,12 +222,4 @@ void MPU6050::writeRegister8(uint8_t reg, uint8_t value) {
   Wire.write(reg);
   Wire.write(value);
   Wire.endTransmission();
-}
-
-void MPU6050::writeRegisterBit(uint8_t reg, uint8_t pos, bool state) {
-  uint8_t value;
-  value = readRegister8(reg);
-  if (state) value |= (1 << pos);
-  else value &= ~(1 << pos);
-  writeRegister8(reg, value);
 }

@@ -76,8 +76,6 @@ class MPU6050 {
     uint8_t readRegister8(uint8_t reg);
     void writeRegister8(uint8_t reg, uint8_t value);
 
-    void writeRegisterBit(uint8_t reg, uint8_t pos, bool state);
-
 };
 
 #endif
