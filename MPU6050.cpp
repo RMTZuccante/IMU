@@ -78,14 +78,15 @@ void MPU6050::setRange(mpu6050_range_t range) {
 void MPU6050::readAccel() {
   int16_t raw[3];
   readData(MPU6050_ACCEL, raw);
-  FORTHREE a[i] = raw[i] * rangePerDigit * 9.80665f;
+  FORTHREE a[i] = 9.80665f * rangePerDigit * raw[i];
 }
 
 void MPU6050::readGyro() {
   int16_t raw[3];
   readData(MPU6050_GYRO, raw);
-  if (useCalibrate) FORTHREE raw[i]-=drift[i];
-  FORTHREE g[i] = raw[i] * dpsPerDigit;
+  FORTHREE g[i] = raw[i];
+  if (useCalibrate) FORTHREE g[i]-=drift[i];
+  FORTHREE g[i]*=dpsPerDigit;
   if (actualThreshold) FORTHREE if (abs(g[i]) < threshold[i]) g[i] = 0;
 }
 
@@ -118,7 +119,7 @@ void MPU6050::calibrateGyro(uint8_t samples) {
   }
 
   FORTHREE {
-    drift[i] = raw[i] / samples;
+    drift[i] = sum[i] / samples;
     th[i] = sqrt((sigma[i] / 50) - (drift[i] * drift[i]));
   }
 
