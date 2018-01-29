@@ -5,6 +5,8 @@
 #include <Wire.h>
 #include <math.h>
 
+#define FORTHREE for (uint8_t i = 0; i < 3; i++)
+
 #define MPU6050_ADDRESS 0x68
 
 #define MPU6050_CONFIG 0x1A
@@ -17,15 +19,6 @@
 
 #define MPU6050_PWR_MGMT 0x6B
 #define MPU6050_WHO_AM_I 0x75
-
-#ifndef VECTOR_STRUCT_H
-#define VECTOR_STRUCT_H
-struct Vector {
-  float x;
-  float y;
-  float z;
-};
-#endif
 
 typedef enum {
   MPU6050_SCALE_2000DPS         = 0b11,
@@ -50,32 +43,25 @@ class MPU6050 {
     void setScale(mpu6050_dps_t scale);
     void setRange(mpu6050_range_t range);
 
-    float getTemperature();
-
     void calibrateGyro(uint8_t samples = 50);
     void setThreshold(uint8_t multiple = 1);
 
-    Vector  readRawGyro();
-    Vector  readNormalizeGyro();
+    void  readGyro();
+    void  readAccel();
+    float getTemperature();
 
-    Vector  readRawAccel();
-    Vector  readNormalizeAccel();
-
+    float a[3];
+    float g[3];
   private:
-    Vector ra, rg;
-    Vector na, ng;
-    Vector tg, dg;
-    Vector th;
+    float threshold[3], drift[3], th[3];
 
     float dpsPerDigit, rangePerDigit;
     float actualThreshold;
     bool useCalibrate;
 
-    void readData();
-
+    void readData(uint8_t reg, int16_t *arr);
     uint8_t readRegister8(uint8_t reg);
     void writeRegister8(uint8_t reg, uint8_t value);
-
 };
 
 #endif

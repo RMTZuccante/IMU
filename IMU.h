@@ -21,8 +21,6 @@ class IMU {
     void read();
     void update();
     MPU6050 imu;
-    Vector acc;
-    Vector gyro;
     Madgwick filter;
     unsigned long microsPerReading;
     unsigned long microsPrevious;

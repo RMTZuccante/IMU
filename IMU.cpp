@@ -41,8 +41,8 @@ float IMU::getTemperature() {
 }
 
 void IMU::read() {
-  acc = imu.readNormalizeAccel();
-  gyro = imu.readNormalizeGyro();
+  imu.readAccel();
+  imu.readGyro();
 }
 
 void IMU::update() {
@@ -50,7 +50,7 @@ void IMU::update() {
   microsNow = micros();
   if (microsNow - microsPrevious >= microsPerReading) {
     read();
-    filter.update(gyro.x, gyro.y, gyro.z, acc.x, acc.y, acc.z);
+    filter.update( imu.g[0], imu.g[1], imu.g[2], imu.a[0], imu.a[1], imu.a[2]);
     microsPrevious+=microsPerReading;
   }
 }
