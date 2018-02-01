@@ -7,11 +7,13 @@ MPU6050::MPU6050() {
   actualThreshold = 0;
 }
 
-void MPU6050::begin(mpu6050_dps_t scale, mpu6050_range_t range) {
+void MPU6050::begin() {
   Wire.begin();
-  writeRegister8(MPU6050_PWR_MGMT, 1); //set the clock to XGyro and turn on
-  setScale(scale);
-  setRange(range);
+  dpsPerDigit = .007633f; //gyro scale at 250DPS
+  rangePerDigit = .000061f; //accel ramge at 2G
+  writeRegister(MPU6050_GYRO_CONFIG,0); //set gyro scale to 250DPS
+  writeRegister(MPU6050_ACCEL_CONFIG,0); //set accel range to 2G
+  writeRegister(MPU6050_PWR_MGMT, 1); //set the clock to XGyro and turn on
 }
 
 bool MPU6050::check() {
@@ -29,50 +31,6 @@ bool MPU6050::check() {
   uint8_t value = Wire.read();
   Wire.endTransmission();
   return value == MPU6050_ADDRESS;
-}
-
-void MPU6050::setScale(mpu6050_dps_t scale) {
-  uint8_t value;
-  switch (scale) {
-    case MPU6050_SCALE_250DPS:
-      dpsPerDigit = .007633f;
-      break;
-    case MPU6050_SCALE_500DPS:
-      dpsPerDigit = .015267f;
-      break;
-    case MPU6050_SCALE_1000DPS:
-      dpsPerDigit = .030487f;
-      break;
-    case MPU6050_SCALE_2000DPS:
-      dpsPerDigit = .060975f;
-      break;
-  }
-  value = readRegister8(MPU6050_GYRO_CONFIG);
-  value &= 0b11100111;
-  value |= (scale << 3);
-  writeRegister8(MPU6050_GYRO_CONFIG, value);
-}
-
-void MPU6050::setRange(mpu6050_range_t range) {
-  uint8_t value;
-  switch (range) {
-    case MPU6050_RANGE_2G:
-      rangePerDigit = .000061f;
-      break;
-    case MPU6050_RANGE_4G:
-      rangePerDigit = .000122f;
-      break;
-    case MPU6050_RANGE_8G:
-      rangePerDigit = .000244f;
-      break;
-    case MPU6050_RANGE_16G:
-      rangePerDigit = .0004882f;
-      break;
-  }
-  value = readRegister8(MPU6050_ACCEL_CONFIG);
-  value &= 0b11100111;
-  value |= (range << 3);
-  writeRegister8(MPU6050_ACCEL_CONFIG, value);
 }
 
 void MPU6050::readAccel() {
@@ -134,20 +92,7 @@ void MPU6050::setThreshold(uint8_t multiple) {
   actualThreshold = multiple;
 }
 
-uint8_t MPU6050::readRegister8(uint8_t reg) {
-  uint8_t value;
-  Wire.beginTransmission(MPU6050_ADDRESS);
-  Wire.write(reg);
-  Wire.endTransmission();
-  Wire.beginTransmission(MPU6050_ADDRESS);
-  Wire.requestFrom(MPU6050_ADDRESS, 1);
-  while (!Wire.available());
-  value = Wire.read();
-  Wire.endTransmission();
-  return value;
-}
-
-void MPU6050::writeRegister8(uint8_t reg, uint8_t value) {
+void MPU6050::writeRegister(uint8_t reg, uint8_t value) {
   Wire.beginTransmission(MPU6050_ADDRESS);
   Wire.write(reg);
   Wire.write(value);

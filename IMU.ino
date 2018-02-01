@@ -20,7 +20,4 @@ void loop() {
   Serial.print(orientation.pitch());
   Serial.print("\tRoll: ");
   Serial.println(orientation.roll());
-
-
-
 }
