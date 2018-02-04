@@ -5,6 +5,8 @@
 #include <Wire.h>
 #include <math.h>
 
+extern TwoWire Wire2;
+
 #define FORTHREE for (uint8_t i = 0; i < 3; i++)
 
 #define MPU6050_ADDRESS 0x68
