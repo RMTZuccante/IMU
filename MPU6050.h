@@ -2,10 +2,9 @@
 #define MPU6050_h
 
 #include <Arduino.h>
-#include <Wire.h>
 #include <math.h>
+#include "I2C.h"
 
-extern TwoWire Wire2;
 
 #define FORTHREE for (uint8_t i = 0; i < 3; i++)
 

@@ -1,5 +1,6 @@
 #ifndef MadgwickAHRS_h
 #define MadgwickAHRS_h
+
 #include <math.h>
 
 #define beta 0.1f

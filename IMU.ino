@@ -1,9 +1,13 @@
+#include "I2C.h"
 #include "IMU.h"
+
+extern TwoWire I2C_2(2);
 
 IMU orientation;
 
 void setup() {
   Serial.begin(115200);
+  I2C_2.begin();
   if (!orientation.check()) while(1) Serial.println("IMU not found!");
   orientation.begin();
   delay(100);
