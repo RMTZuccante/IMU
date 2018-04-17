@@ -5,7 +5,6 @@
 #include <math.h>
 #include "I2C.h"
 
-
 #define FORTHREE for (uint8_t i = 0; i < 3; i++)
 
 #define MPU6050_ADDRESS 0x68

@@ -1,14 +1,27 @@
 #include "MadgwickAHRS.h"
 
-void Madgwick::begin(float sampleFrequency) {
-  invSampleFreq = 1.0f / sampleFrequency;
-  anglesComputed = 0;
+/**
+ * Starts the filter with the given refresh.
+ * @param frequency Updates frequency in Hertz.
+ */
+void Madgwick::start(float frequency) {
+  invSampleFreq = 1.0f / frequency;
+  anglesComputed = false;
   q0 = 1.0f;
   q1 = 0.0f;
   q2 = 0.0f;
   q3 = 0.0f;
 }
 
+/**
+ * Updates the filter. This function has to be called as often as the refresh says.
+ * @param gx Gyroscope x.
+ * @param gy Gyroscope y.
+ * @param gz Gyroscope z.
+ * @param ax Accelerometer x.
+ * @param ay Accelerometer y.
+ * @param az Accelerometer z.
+ */
 void Madgwick::update(float gx, float gy, float gz, float ax, float ay, float az) {
   float recipNorm;
   float s0, s1, s2, s3;
@@ -80,22 +93,41 @@ void Madgwick::update(float gx, float gy, float gz, float ax, float ay, float az
   q1 *= recipNorm;
   q2 *= recipNorm;
   q3 *= recipNorm;
-  anglesComputed = 0;
+  anglesComputed = false;
 }
 
+/**
+ * Reads (and eventually compute) the yaw.
+ * @return The corrected yaw value in degrees.
+ */
 float Madgwick::getYaw() {
   if (!anglesComputed) computeAngles();
   return yaw * 57.29578f + 180.0f;
 }
+
+/**
+ * Reads (and eventually compute) the pitch.
+ * @return The corrected pitch value in degrees.
+ */
 float Madgwick::getPitch() {
   if (!anglesComputed) computeAngles();
   return pitch * 57.29578f;
 }
+
+/**
+ * Reads (and eventually compute) the roll.
+ * @return The corrected roll value in degrees.
+ */
 float Madgwick::getRoll() {
   if (!anglesComputed) computeAngles();
   return roll * 57.29578f;
 }
 
+/**
+ * Fast inverse square root calculation.
+ * @param x The value to be computed.
+ * @return The square root of x.
+ */
 float Madgwick::invSqrt(float x) {
   float halfx = 0.5f * x;
   float y = x;
@@ -107,9 +139,12 @@ float Madgwick::invSqrt(float x) {
   return y;
 }
 
+/**
+ * Computes and convert to degree the angles.
+ */
 void Madgwick::computeAngles() {
   roll = atan2f(q0 * q1 + q2 * q3, 0.5f - q1 * q1 - q2 * q2);
   pitch = asinf(-2.0f * (q1 * q3 - q0 * q2));
   yaw = atan2f(q1 * q2 + q0 * q3, 0.5f - q2 * q2 - q3 * q3);
-  anglesComputed = 1;
+  anglesComputed = true;
 }

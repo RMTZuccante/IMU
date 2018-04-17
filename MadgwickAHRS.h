@@ -19,7 +19,7 @@ class Madgwick {
     bool anglesComputed;
     void computeAngles();
   public:
-    void begin(float sampleFrequency);
+    void start(float frequency);
     void update(float gx, float gy, float gz, float ax, float ay, float az);
     float getYaw();
     float getPitch();

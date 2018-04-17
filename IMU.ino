@@ -13,7 +13,7 @@ void setup() {
   delay(100);
   orientation.calibrate();
   delay(100);
-  orientation.start();
+  orientation.start(50);
   Serial.println("All ok! Starting...");
 }
 

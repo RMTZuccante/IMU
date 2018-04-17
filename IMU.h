@@ -4,22 +4,21 @@
 #include "MadgwickAHRS.h"
 #include "MPU6050.h"
 
-#define REFRESH 50
-
 class IMU {
   public:
-    IMU();
+    IMU() : microsPerReading(0) {}
     void begin();
     bool check();
-    void start();
+    void start(unsigned long refresh);
     float yaw();
     float pitch();
     float roll();
+    float inclination();
     float getTemperature();
     void calibrate();
+    void update();
   private:
     void read();
-    void update();
     MPU6050 imu;
     Madgwick filter;
     unsigned long microsPerReading;
